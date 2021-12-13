@@ -15,12 +15,22 @@ public class CustomerHandler {
     @Autowired
     private CustomerDao customerDao;
 
-    public Mono<ServerResponse> loadCustomers(ServerRequest request){
+    public Mono<ServerResponse> loadCustomers(ServerRequest request) {
         Flux<Customer> customersList = customerDao.getCustomersList();
-        return  ServerResponse.ok().body(customersList,Customer.class);
+        return ServerResponse.ok().body(customersList, Customer.class);
 
     }
 
 
+    public Mono<ServerResponse> findCustomer(ServerRequest request) {
+        Integer customerId = Integer.valueOf(request.pathVariable("input"));
+        Mono<Customer> monoCustomer = customerDao.getCustomersList().filter(c -> c.getId() == customerId).next();//take(1).single();
+        return ServerResponse.ok().body(monoCustomer, Customer.class);
+    }
 
+    public Mono<ServerResponse> saveCustomer(ServerRequest request) {
+        Mono<Customer> customerMono = request.bodyToMono(Customer.class);
+        Mono<String> saveResponse = customerMono.map(dto -> dto.getId() + ":" + dto.getName());
+        return  ServerResponse.ok().body(saveResponse,String.class);
+    }
 }

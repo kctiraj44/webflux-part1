@@ -8,6 +8,12 @@ public class SpringWebFluxApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(SpringWebFluxApplication.class, args);
+
+		System.out.println("--------------------");
+
 	}
+	
+	
+
 
 }
